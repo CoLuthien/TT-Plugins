@@ -29,6 +29,7 @@ public class RESTReceiver : ModuleRules
 				"HTTP",
 				"Json",
 				"JsonUtilities",
+				"UMG"
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);

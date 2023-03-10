@@ -6,16 +6,16 @@
 
 
 inline static FHttpModule* m_module = &FHttpModule::Get();
-UHttpReceiverComponent::UHttpReceiverComponent() : Super()
+ AHttpReceiver::AHttpReceiver() : Super()
 {
 }
 
 void
-UHttpReceiverComponent::SendRequest(FString const& URL, FString const& Verb, FString const& API)
+ AHttpReceiver::SendRequest(FString const& URL, FString const& Verb, FString const& API)
 {
     TSharedRef<IHttpRequest> Request = m_module->CreateRequest();
     Request->OnProcessRequestComplete().BindUObject(
-        this, &UHttpReceiverComponent::OnResponseReceived);
+        this, &AHttpReceiver::OnResponseReceived);
 
     // This is the url on which to process the request
 
@@ -28,7 +28,7 @@ UHttpReceiverComponent::SendRequest(FString const& URL, FString const& Verb, FSt
 }
 
 void
-UHttpReceiverComponent::OnResponseReceived(FHttpRequestPtr Request,
+ AHttpReceiver::OnResponseReceived(FHttpRequestPtr Request,
                                            FHttpResponsePtr Response,
                                            bool bWasSuccessful)
 {
@@ -49,8 +49,7 @@ UHttpReceiverComponent::OnResponseReceived(FHttpRequestPtr Request,
     if (FJsonSerializer::Deserialize(Reader, JsonObject))
     {
         // Get the value of the json object by field name
-        FString recievedInt = JsonObject->GetStringField("total");
-
-        UE_LOG(LogTemp, Log, TEXT("HTTP request result   customInt : %s"), *recievedInt);
+        FString Result = JsonObject->GetStringField("total");
+        RequestWriteBack(Result);
     }
 }
